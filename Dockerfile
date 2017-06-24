@@ -1,4 +1,4 @@
-FROM redis:3.2.8-alpine
+FROM redis:3.2.9-alpine
 
 MAINTAINER Vitaly Aminev <v@makeomatic.ca>
 
