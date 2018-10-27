@@ -4,7 +4,7 @@ if [[ "$1" = 'redis-cluster' ]]; then
   if [[ -e /redis-data/7000/nodes.conf ]] && [[ x"${ENV}" = x"production" ]]; then
     exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
   else
-    for port in `seq 7000 7002`; do
+    for port in `seq 7000 7005`; do
       mkdir -p /redis-conf/${port}
       mkdir -p /redis-data/${port}
 
@@ -15,15 +15,15 @@ if [[ "$1" = 'redis-cluster' ]]; then
     done
 
     # recreate redis configuration
-    for port in `seq 7000 7002`; do
+    for port in `seq 7000 7005`; do
       PORT=${port} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
     done
 
     /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
     sleep 3
 
-    IP=${IP:-`ifconfig | grep "inet addr:17" | cut -f2 -d ":" | cut -f1 -d " "`}
-    echo "yes" | ruby /redis-trib.rb create --replicas 0 ${IP}:7000 ${IP}:7001 ${IP}:7002
+    IP=${IP:-`ifconfig | grep "inet addr" | grep -v "127.0.0.1" | cut -f2 -d ":" | cut -f1 -d " "`}
+    echo "yes" | ruby /redis-trib.rb create --replicas 1 ${IP}:7000 ${IP}:7001 ${IP}:7002 ${IP}:7003 ${IP}:7004 ${IP}:7005
     tail -f /var/log/redis-cli*.log
   fi
 else

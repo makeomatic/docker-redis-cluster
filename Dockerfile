@@ -1,4 +1,4 @@
-FROM redis:3.2.9-alpine
+FROM redis:3.2.12-alpine
 
 MAINTAINER Vitaly Aminev <v@makeomatic.ca>
 
@@ -13,7 +13,7 @@ RUN \
 RUN gem install --no-rdoc --no-ri redis \
   && mkdir /redis-conf \
   && mkdir /redis-data \
-  && wget -O /redis-trib.rb http://download.redis.io/redis-stable/src/redis-trib.rb
+  && wget -O /redis-trib.rb https://raw.githubusercontent.com/antirez/redis/3.2.12/src/redis-trib.rb
 
 COPY ./docker-data/redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
 COPY ./docker-data/redis.tmpl /redis-conf/redis.tmpl
@@ -24,7 +24,7 @@ COPY ./docker-data/supervisord.conf /etc/supervisor/supervisord.conf
 # Add startup script
 COPY ./docker-data/docker-entrypoint.sh /docker-entrypoint.sh
 
-EXPOSE 7000 7001 7002
+EXPOSE 7000 7001 7002 7003 7004 7005
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["redis-cluster"]
