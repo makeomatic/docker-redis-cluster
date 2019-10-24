@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 if [[ "$1" = 'redis-cluster' ]]; then
   if [[ -e /redis-data/7000/nodes.conf ]] && [[ x"${ENV}" = x"production" ]]; then
     exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
@@ -23,7 +25,7 @@ if [[ "$1" = 'redis-cluster' ]]; then
     sleep 3
 
     IP=${IP:-`ifconfig | grep "inet addr" | grep -v "127.0.0.1" | cut -f2 -d ":" | cut -f1 -d " "`}
-    echo "yes" | ruby /redis-trib.rb create --replicas 1 ${IP}:7000 ${IP}:7001 ${IP}:7002 ${IP}:7003 ${IP}:7004 ${IP}:7005
+    echo "yes" | redis-cli --cluster create ${IP}:7000 ${IP}:7001 ${IP}:7002 ${IP}:7003 ${IP}:7004 ${IP}:7005 --cluster-replicas 1
     tail -f /var/log/redis-cli*.log
   fi
 else

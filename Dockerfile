@@ -1,19 +1,14 @@
-FROM redis:3.2.12-alpine
+FROM redis:5-alpine
 
 MAINTAINER Vitaly Aminev <v@makeomatic.ca>
 
 RUN \
   apk --no-cache add \
-    ruby \
     supervisor \
     tcl \
   	gettext \
-    git
-
-RUN gem install --no-rdoc --no-ri redis \
   && mkdir /redis-conf \
-  && mkdir /redis-data \
-  && wget -O /redis-trib.rb https://raw.githubusercontent.com/antirez/redis/3.2.12/src/redis-trib.rb
+  && mkdir /redis-data
 
 COPY ./docker-data/redis-cluster.tmpl /redis-conf/redis-cluster.tmpl
 COPY ./docker-data/redis.tmpl /redis-conf/redis.tmpl

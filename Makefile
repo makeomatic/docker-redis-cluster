@@ -1,6 +1,6 @@
 CID_FILE = /tmp/makeomatic-redis-cluster.cid
 CID =`cat $(CID_FILE)`
-IMAGE_NAME = makeomatic/redis-cluster
+IMAGE_NAME = makeomatic/redis-cluster:5-alpine
 PORTS = -p 7000:7000 -p 7001:7001 -p 7002:7002 -p 7003:7003 -p 7004:7004 -p 7005:7005
 
 help:
